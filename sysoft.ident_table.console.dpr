@@ -10,6 +10,18 @@ uses
 
 {$R *.res}
 
-begin
+var
+  ident: string;
 
+begin
+  writeln('Lab. work 1. War10.');
+
+  UI.Lab1Form.FormCreate();
+  UI.Lab1Form.FileLoad(
+    'C:\Users\samson\Documents\GitHub\sysoft.ident_table.console\data.dat');
+  //UI.Lab1Form.AllSearchClick();
+  write('Hello! '); read(ident);
+  UI.Lab1Form.BtnSearchClick(ident);
+  UI.Lab1Form.BtnResetClick();
+  UI.Lab1Form.ExitCom();
 end.

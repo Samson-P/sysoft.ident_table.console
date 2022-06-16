@@ -15,13 +15,13 @@ type
     BtnReset: string;
     BtnAllSearch: string;
     BtnFile: string;
-    procedure formcreate();
+    procedure FormCreate();
     procedure EditFileChange();
     procedure FileLoad(Sender: string);
     procedure SearchFilename(Sender: string);
     procedure ExitCom();
     procedure BtnSearchClick(Sender: string);
-    procedure BtnResetClick(Sender: TObject);
+    procedure BtnResetClick();
     procedure AllSearchClick(Sender: TObject);
     procedure FormClose();
    private
@@ -49,9 +49,9 @@ begin
   { Начальная инициализация таблиц и счетчиков }
   InitTreeVar;
   InitHashVar;
-  iCountNum := 0;
-  iCountHash := 0;
-  iCountTree := 0;
+  //iCountNum := 0;
+  //iCountHash := 0;
+  //iCountTree := 0;
 end;
 
 procedure TLab1Form.FormClose();
@@ -91,30 +91,29 @@ end;
 procedure TLab1Form.FileLoad(Sender: string);
 var
   sTmp: string[32]; // буфер для чтения из файла
-  i: integer;
   f: TextFile; // файл
   fName: string[80]; // имя файла
 begin
   { Чтение файла }
   fName := Sender; AssignFile(f, fName);
-{$I-}
+//{$I-}
   Reset(f); // открыть для чтения
-{$I+}
+//{$I+}
   if IOResult <> 0 then
   begin
     write('Ошибка доступа к файлу ' + fName); exit;
   end;
   { Очищаем обе таблицы и счетчики }
-  ClearTreeVar;
-  ClearHashVar;
-  iCountNum := 0;
-  iCountHash := 0;
-  iCountTree := 0;
+  //ClearTreeVar;
+  //ClearHashVar;
+  //iCountNum := 0;
+  //iCountHash := 0;
+  //iCountTree := 0;
   { Просматриваем все строки прочитанного файла,
     считая каждую строку идентификатором }
   while not EOF(f) do
   begin
-    readln(f, sTmp);// прочитать строку из файла
+    readln(f, sTmp); write(sTmp);// прочитать строку из файла
     { Убираем незначащие пробелы в начале и в конце строки }
     if sTmp <> '' then { пустую строку пропускаем }
     begin
@@ -123,7 +122,7 @@ begin
       { Добавляем идентификатор в дерево
         и увеличиваем счетчик сделанных сравнений }
       if AddTreeVar(sTmp) = nil then
-       write(Format('Ошибка добавления идентификатора "%s" в дерево!',[sTmp]));
+        write(Format('Ошибка добавления идентификатора "%s" в дерево!',[sTmp]));
       Inc(iCountTree,GetTreeCount);
       { Добавляем идентификатор в таблицу рехэширования
         и увеличиваем счетчик сделанных сравнений }
@@ -133,6 +132,7 @@ begin
     end;
     //Strings[i] := sTmp;
   end{for};
+
   CloseFile(f); // закрыть файл
   write(Format('Считано %d идентификаторов',[iCountNum]));
   { Заполняем информацию о статистике сравнений для считанного файла }
@@ -186,9 +186,6 @@ procedure TLab1Form.AllSearchClick(Sender: TObject);
 { Авто-поиск всех подряд идентификаторов из списка }
 var
   i,iAllTree,iAllHash: integer;
-  sTmp: string[32];
-  f: TextFile; // файл
-  fName: string[80]; // имя файла
 begin
   { Запоминаем текущие счетчики сравнений }
   iAllTree := iCountTree;
@@ -210,7 +207,7 @@ begin
   ViewStatistic(iCountTree-iAllTree,iCountHash-iAllHash);
 end;
 
-procedure TLab1Form.BtnResetClick(Sender: TObject);
+procedure TLab1Form.BtnResetClick();
 begin
   { Обнуление статистической информации по кнопке "Сброс" }
   iCountNum := 0;
